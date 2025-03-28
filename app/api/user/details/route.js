@@ -40,15 +40,8 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { fullname, email, phone_number, gender, dob } = await req.json();
-
-    console.log("Request Body:", {
-      fullname,
-      email,
-      phone_number,
-      gender,
-      dob,
-    });
+    const { user_id, fullname, email, phone_number, gender, dob } =
+      await req.json();
 
     if (!fullname || !email || !phone_number || !gender || !dob) {
       return NextResponse.json(
@@ -57,15 +50,21 @@ export async function POST(req) {
       );
     }
 
+    const details_id = uuid();
+
     const query = `INSERT INTO details(id, fullname, email, phone_number, gender, dob, flag) VALUES(?,?,?,?,?,?,1)`;
     const response = await queryDatabase(query, [
-      uuid(),
+      details_id,
       fullname,
       email,
       phone_number,
       gender,
       dob,
     ]);
+
+    const queryTwo = `INSERT INTO user_details(id, user_id, details_id,flag) VALUES(?,?,?,1)`;
+
+    await queryDatabase(queryTwo, [uuid(), user_id, details_id]);
 
     return NextResponse.json({
       message: "Details added successfully",

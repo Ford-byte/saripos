@@ -1,7 +1,10 @@
+"use client";
+
 import Facebook from "@/public/icons/facebook";
 import Instagram from "@/public/icons/insta";
 import LinkedIn from "@/public/icons/linkedin";
 import Twitter from "@/public/icons/twitter";
+import { useUserStore } from "@/public/store/userStore";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,6 +15,12 @@ export default function Footer() {
     { href: "/", icon: <Twitter className="size-6" />, label: "Twitter" },
     { href: "/", icon: <LinkedIn className="size-6" />, label: "LinkedIn" },
   ];
+
+  const { isLogin } = useUserStore();
+
+  if (!isLogin) {
+    return <div></div>;
+  }
 
   return (
     <footer className="center">
