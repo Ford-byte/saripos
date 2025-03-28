@@ -1,6 +1,5 @@
 import { createPool } from "mysql2";
 
-// Create a connection pool
 const pool = createPool({
   host: process.env.NEXT_DB_HOST,
   user: process.env.NEXT_DB_USER,
@@ -11,7 +10,6 @@ const pool = createPool({
   queueLimit: 0,
 });
 
-// Function to get a connection from the pool
 export const getConnection = () => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
@@ -24,12 +22,11 @@ export const getConnection = () => {
   });
 };
 
-// Function to query the database
 export const queryDatabase = async (query, params) => {
   const connection = await getConnection();
   return new Promise((resolve, reject) => {
     connection.query(query, params, (err, results) => {
-      connection.release(); // Release the connection back to the pool
+      connection.release();
       if (err) {
         reject(err);
       } else {
@@ -39,10 +36,8 @@ export const queryDatabase = async (query, params) => {
   });
 };
 
-// GET function to test the database connection
 export async function GET() {
   try {
-    // Execute a simple query to check the connection
     const result = await queryDatabase("SELECT NOW() AS currentTime", []);
     return new Response(
       JSON.stringify({

@@ -19,7 +19,7 @@ export default function HeaderComponents() {
   };
 
   return (
-    <div className="center border-b shadow-md w-full fixed bg-white">
+    <div className="center border-b shadow-md w-full fixed bg-white z-[1000]">
       <div className="container py-4 flex justify-between items-center">
         <Link href={`/`}>
           <Image

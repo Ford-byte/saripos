@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"; // Import jsonwebtoken
+import jwt from "jsonwebtoken";
 import { queryDatabase } from "../../config/route";
 
-const JWT_SECRET = "your_jwt_secret_key"; // Replace with a secure secret key
+const JWT_SECRET = "your_jwt_secret_key";
 
 export async function POST(req) {
   try {

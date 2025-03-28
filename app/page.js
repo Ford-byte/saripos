@@ -12,7 +12,12 @@ const BannerBlock = dynamic(() =>
 const CategoryBlock = dynamic(() =>
   import("@/public/components/block/CategoryBlock")
 );
-
+const PopularProductBlock = dynamic(() =>
+  import("@/public/components/block/PopularProductBlock")
+);
+const ProductBlock = dynamic(() =>
+  import("@/public/components/block/ProductBlock")
+);
 export default function Home() {
   const [changeForm, setChangeForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -54,6 +59,8 @@ export default function Home() {
     <h1 className="pt-[80px] text-2xl font-bold">
       <BannerBlock />
       <CategoryBlock />
+      <PopularProductBlock />
+      <ProductBlock />
     </h1>
   );
 }

@@ -2,6 +2,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./_layout/Header";
+import Footer from "./_layout/components/footer";
 
 export const metadata = {
   title: "Saripos",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
       <body>
         <Header />
         <div className="">{children}</div>
+        <Footer />
         <ToastContainer
           position="top-right"
           autoClose={1000}

@@ -59,7 +59,7 @@ export default function CategoryBlock() {
                     alt={category.category}
                     className="w-full h-24 object-cover rounded"
                   />
-                  <h3 className="mt-2 text-lg font-bold absolute z-[20] bottom-0 center bg-black/50 text-white">
+                  <h3 className="mt-2 text-lg font-bold absolute z-[20] bottom-0 center bg-black/50 text-white capitalize leading-[20px]">
                     {category.category}
                   </h3>
                 </div>
