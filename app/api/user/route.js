@@ -2,12 +2,23 @@ import { NextResponse } from "next/server";
 import { queryDatabase } from "../config/route";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import { cacheValidator } from "../add-ons/cacheValidator";
 
 export async function GET() {
   try {
-    const query = `SELECT * FROM user`;
+    const cachedData = cacheValidator({ action: "get", key: "users" });
 
+    if (cachedData) {
+      return NextResponse.json({
+        message: "Fetch Success (from cache)",
+        data: cachedData,
+      });
+    }
+
+    const query = `SELECT * FROM user`;
     const response = await queryDatabase(query);
+
+    cacheValidator({ action: "set", key: "users", data: response });
 
     return NextResponse.json({
       message: "Fetch Success",
@@ -17,6 +28,7 @@ export async function GET() {
     return NextResponse.json(
       {
         message: "Internal server error",
+        error,
       },
       { status: 500 }
     );
@@ -49,6 +61,9 @@ export async function POST(req) {
 
     await queryDatabase(insertUserQuery, [uuid(), username, hashedPassword]);
 
+    // Clear the cache for users after adding a new user
+    cacheValidator({ action: "delete", key: "users" });
+
     return NextResponse.json(
       { message: "User created successfully." },
       { status: 201 }
@@ -56,7 +71,7 @@ export async function POST(req) {
   } catch (error) {
     console.error("Error in POST /api/user:", error);
     return NextResponse.json(
-      { message: "Internal server error." },
+      { message: "Internal server error.", error },
       { status: 500 }
     );
   }

@@ -1,0 +1,84 @@
+import { NextResponse } from "next/server";
+import { v4 as uuid } from "uuid";
+import { queryDatabase } from "../../config/route";
+import { cacheValidator } from "../../add-ons/cacheValidator";
+
+export async function GET() {
+  try {
+    // Check for cached data
+    const cachedData = cacheValidator({ action: "get", key: "details" });
+
+    if (cachedData) {
+      return NextResponse.json({
+        message: "Fetch Success (from cache)",
+        data: cachedData,
+      });
+    }
+
+    // Query database if no cached data found
+    const query = `SELECT * FROM details WHERE flag = 1`;
+    const response = await queryDatabase(query);
+
+    // Cache the fetched data
+    cacheValidator({ action: "set", key: "details", data: response });
+
+    return NextResponse.json({
+      message: "Fetch Success",
+      data: response,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+        error: error.message || "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req) {
+  try {
+    const { fullname, email, phone_number, gender, dob } = await req.json();
+
+    console.log("Request Body:", {
+      fullname,
+      email,
+      phone_number,
+      gender,
+      dob,
+    });
+
+    if (!fullname || !email || !phone_number || !gender || !dob) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const query = `INSERT INTO details(id, fullname, email, phone_number, gender, dob, flag) VALUES(?,?,?,?,?,?,1)`;
+    const response = await queryDatabase(query, [
+      uuid(),
+      fullname,
+      email,
+      phone_number,
+      gender,
+      dob,
+    ]);
+
+    return NextResponse.json({
+      message: "Details added successfully",
+      data: response,
+    });
+  } catch (error) {
+    console.error("Error adding data:", error);
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+        error: error.message || "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
+}

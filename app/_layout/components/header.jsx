@@ -61,12 +61,7 @@ export default function HeaderComponents() {
               <ul className="py-2">
                 <Link href={`/profile`}>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Profile
-                  </li>
-                </Link>
-                <Link href={`/settings`}>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Settings
+                    My Account
                   </li>
                 </Link>
                 <li

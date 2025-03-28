@@ -7,7 +7,7 @@ import { cacheValidator } from "../add-ons/cacheValidator";
 
 export async function GET() {
   try {
-    const cachedData = cacheValidator({ action: "get", key: "categories" });
+    const cachedData = cacheValidator({ action: "get", key: "products" });
 
     if (cachedData) {
       return NextResponse.json({
@@ -16,10 +16,10 @@ export async function GET() {
       });
     }
 
-    const query = `SELECT * FROM category`;
+    const query = `SELECT * FROM product`;
     const response = await queryDatabase(query);
 
-    cacheValidator({ action: "set", key: "categories", data: response });
+    cacheValidator({ action: "set", key: "products", data: response });
 
     return NextResponse.json({
       message: "Fetch Success",
@@ -27,7 +27,7 @@ export async function GET() {
     });
   } catch (error) {
     return NextResponse.json(
-      { message: "Internal server error", error: error },
+      { message: "Internal server error", error },
       { status: 500 }
     );
   }
@@ -44,12 +44,15 @@ export async function POST(req) {
     }
 
     const formData = await req.formData();
-    const category = formData.get("category");
+    const name = formData.get("name");
+    const price = formData.get("price");
+    const stockin = formData.get("stockin");
     const file = formData.get("image");
+    const category = formData.get("category");
 
-    if (!category || !file) {
+    if (!name || !price || !stockin || !file || !category) {
       return NextResponse.json(
-        { message: "Category and image are required" },
+        { message: "Name, price, stockin, and image are required" },
         { status: 400 }
       );
     }
@@ -65,15 +68,23 @@ export async function POST(req) {
     await writeFile(imagePath, buffer);
 
     const id = uuid();
-    const query = `INSERT INTO category(id, category, image, flag) VALUES(?,?,?,1)`;
-    await queryDatabase(query, [id, category, `/upload/${imageName}`]);
+    const query = `INSERT INTO product(id, name, price, stock_in, image, category, flag) VALUES(?,?,?,?,?,?,1)`;
+    await queryDatabase(query, [
+      id,
+      name,
+      price,
+      stockin,
+      `/upload/${imageName}`,
+      category,
+    ]);
 
-    cacheValidator({ action: "delete", key: "categories" });
+    cacheValidator({ action: "delete", key: "products" });
 
-    return NextResponse.json({ message: "Category added successfully" });
+    return NextResponse.json({ message: "Product added successfully" });
   } catch (error) {
+    console.error("Error in POST /product:", error);
     return NextResponse.json(
-      { message: "Internal server error", error: error },
+      { message: "Internal server error", error },
       { status: 500 }
     );
   }
