@@ -7,10 +7,12 @@ export const useUserStore = create(
   persist(
     (set) => ({
       user: null,
+      details: null,
       isLogin: false,
 
       setLogin: (isLogin) => set({ isLogin }),
       setUser: (user) => set({ user }),
+      setDetails: (details) => set({ details }),
 
       logOut: () => {
         localStorage.removeItem("token");
@@ -58,6 +60,33 @@ export const useUserStore = create(
           );
         }
       },
+
+      addUserDetails: async ({
+        user_id,
+        fullname,
+        email,
+        phone_number,
+        gender,
+        dob,
+      }) => {
+        try {
+          const response = await axios.post(`/api/user/details`, {
+            user_id,
+            fullname,
+            email,
+            phone_number,
+            gender,
+            dob,
+          });
+          toast.success(response?.data?.message);
+        } catch (error) {
+          toast.error(error?.response?.data?.message || "An error occurred.");
+        }
+      },
+
+      getUserDetails : async ({}) => {
+        
+      }
     }),
     {
       name: "user-storage",

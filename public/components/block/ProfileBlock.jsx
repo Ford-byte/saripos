@@ -1,18 +1,40 @@
 "use client";
 
 import Plus from "@/public/icons/plus";
+import { useUserStore } from "@/public/store/userStore";
 import { useState } from "react";
+import { z } from "zod";
+
+// Define a Zod schema for user data validation
+const userSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  email: z.string().email("Invalid email address"),
+  phone: z
+    .string()
+    .regex(/^\d{10,15}$/, "Phone number must be between 10 and 15 digits"),
+  gender: z.enum(["Male", "Female", "Other"], "Invalid gender"),
+  dob: z
+    .string()
+    .refine(
+      (date) => !isNaN(new Date(date).getTime()),
+      "Invalid date of birth"
+    ),
+});
 
 export default function ProfileBlock() {
   const [profile, setProfile] = useState(null);
   const [userData, setUserData] = useState({
-    username: "Username",
-    name: "Fullname",
-    email: "Email",
-    phone: "Phone Number",
+    name: "",
+    email: "",
+    phone: "",
     gender: "Male",
-    dob: "2001-01-01",
+    dob: "",
   });
+  const [errors, setErrors] = useState({});
+  const { addUserDetails, user } = useUserStore();
+
+  // Ensure user_id is retrieved from the user object
+  const user_id = user?.id;
 
   const handleProfileUpload = (event) => {
     const file = event.target.files[0];
@@ -31,12 +53,38 @@ export default function ProfileBlock() {
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "", // Clear the error for the field being edited
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated User Data:", userData);
-    // Add logic to save the updated user data (e.g., API call)
+    // Validate user data using Zod
+    const validationResult = userSchema.safeParse(userData);
+
+    if (!validationResult.success) {
+      const fieldErrors = validationResult.error.errors.reduce((acc, err) => {
+        acc[err.path[0]] = err.message;
+        return acc;
+      }, {});
+      setErrors(fieldErrors);
+      return;
+    }
+
+    try {
+      await addUserDetails({
+        user_id,
+        fullname: userData.name,
+        email: userData.email,
+        phone_number: userData.phone,
+        gender: userData.gender,
+        dob: userData.dob,
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
@@ -63,22 +111,14 @@ export default function ProfileBlock() {
               onChange={handleProfileUpload}
             />
           </div>
-          <div className="text-2xl font-[600]">{userData.name}</div>
+          <div className="text-2xl font-[600]">
+            {userData.name || "Fullname"}
+          </div>
         </div>
         <div className="w-full grid grid-cols-5 gap-x-[20px] h-fit">
           <div className="col-span-2 border">
             <h2 className="px-4 py-2 text-xl font-[600]">My Profile</h2>
             <form onSubmit={handleSubmit} className="px-4 py-2">
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  value={userData.username}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">Name</label>
                 <input
@@ -88,6 +128,9 @@ export default function ProfileBlock() {
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">Email</label>
@@ -98,6 +141,9 @@ export default function ProfileBlock() {
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">
@@ -110,6 +156,9 @@ export default function ProfileBlock() {
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                 />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">Gender</label>
@@ -123,6 +172,9 @@ export default function ProfileBlock() {
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
+                {errors.gender && (
+                  <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">
@@ -135,6 +187,9 @@ export default function ProfileBlock() {
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                 />
+                {errors.dob && (
+                  <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
+                )}
               </div>
               <button
                 type="submit"

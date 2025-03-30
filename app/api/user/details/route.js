@@ -5,7 +5,6 @@ import { cacheValidator } from "../../add-ons/cacheValidator";
 
 export async function GET() {
   try {
-    // Check for cached data
     const cachedData = cacheValidator({ action: "get", key: "details" });
 
     if (cachedData) {
@@ -15,11 +14,9 @@ export async function GET() {
       });
     }
 
-    // Query database if no cached data found
     const query = `SELECT * FROM details WHERE flag = 1`;
     const response = await queryDatabase(query);
 
-    // Cache the fetched data
     cacheValidator({ action: "set", key: "details", data: response });
 
     return NextResponse.json({
@@ -53,6 +50,7 @@ export async function POST(req) {
     const details_id = uuid();
 
     const query = `INSERT INTO details(id, fullname, email, phone_number, gender, dob, flag) VALUES(?,?,?,?,?,?,1)`;
+    
     const response = await queryDatabase(query, [
       details_id,
       fullname,
@@ -65,6 +63,8 @@ export async function POST(req) {
     const queryTwo = `INSERT INTO user_details(id, user_id, details_id,flag) VALUES(?,?,?,1)`;
 
     await queryDatabase(queryTwo, [uuid(), user_id, details_id]);
+
+    cacheValidator({ action: "delete", key: "details" });
 
     return NextResponse.json({
       message: "Details added successfully",

@@ -64,14 +64,15 @@ export default function HeaderComponents() {
                     My Account
                   </li>
                 </Link>
-                <li
+                <Link
+                  href={`/`}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
                     logOut();
                   }}
                 >
                   Logout
-                </li>
+                </Link>
               </ul>
             </div>
           </div>
