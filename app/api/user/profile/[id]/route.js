@@ -5,16 +5,16 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
   try {
     const url = new URL(req.url);
-    const id = url.searchParams.get("id");
+    const userId = url.searchParams.get("id");
 
-    if (!id) {
+    if (!userId) {
       return NextResponse.json(
         { message: "User ID is required" },
         { status: 400 }
       );
     }
 
-    const cacheKey = `detail_${id}`;
+    const cacheKey = `user_profile_${userId}`;
     const cachedData = await cacheValidator({ action: "get", key: cacheKey });
 
     if (cachedData) {
@@ -24,34 +24,31 @@ export async function GET(req) {
       });
     }
 
-    // Query the database with the user ID
+    // Query user profile data
     const query = `
-      SELECT * 
-      FROM user_details AS ud
-      LEFT JOIN user AS u ON ud.user_id = u.id
-      LEFT JOIN details AS d ON ud.details_id = d.id 
-      WHERE ud.user_id = ?
+      SELECT * FROM user_profile AS up
+      LEFT JOIN profile AS p ON up.profile_id = p.id
+      WHERE up.user_id = ?
     `;
 
-    const response = await queryDatabase(query, [id]);
+    const userProfile = await queryDatabase(query, [userId]);
 
-    if (!response || response.length === 0) {
+    if (!userProfile || userProfile.length === 0) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Cache the response data
-    await cacheValidator({ action: "set", key: cacheKey, data: response });
+    // Cache the fetched data
+    await cacheValidator({ action: "set", key: cacheKey, data: userProfile });
 
     return NextResponse.json({
       message: "Fetch Success",
-      data: response,
+      data: userProfile,
     });
   } catch (error) {
-    console.error("Error fetching data:", error);
     return NextResponse.json(
       {
         message: "Internal server error",
-        error: error.message || "Unknown error",
+        error: error.message ?? "Unknown error",
       },
       { status: 500 }
     );

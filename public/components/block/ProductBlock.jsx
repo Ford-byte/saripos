@@ -30,7 +30,6 @@ export default function ProductBlock() {
         <div className="grid grid-cols-4 gap-4 h-fit">
           {products && products.length > 0 ? (
             products.map((item) => {
-              console.log(item);
               return (
                 <div
                   key={item.id}
