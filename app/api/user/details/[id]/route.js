@@ -36,7 +36,7 @@ export async function GET(req) {
     const response = await queryDatabase(query, [id]);
 
     if (!response || response.length === 0) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: "Please provide details." }, { status: 404 });
     }
 
     // Cache the response data

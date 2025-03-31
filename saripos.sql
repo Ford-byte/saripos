@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 28, 2025 at 09:11 AM
+-- Generation Time: Mar 31, 2025 at 10:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,13 +39,13 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `category`, `image`, `flag`) VALUES
-('133c5736-ee29-4419-acb2-7fb997124bc4', 'fruits', '/upload/45ff9655-2d67-4f41-b438-0cab2a9f3780.png', 1),
-('2b504280-3d5c-4e35-989e-e52da4dc08cc', 'Pastries', '/upload/0a6353f0-e52c-419e-b68b-2d6f65570d87.png', 1),
-('5390e5b7-57ea-482e-9411-2bd5b813d560', 'grains', '/upload/30eae3a5-110c-4a6c-b837-5b5ddf31dcb8.png', 1),
-('761b8547-0de7-4985-8186-ae955c7145f7', 'vegetables', '/upload/77dd532a-a903-4cf6-9fc4-475ace5f5e9c.png', 1),
-('866294fd-1a82-44b4-83bb-fab0eb628acb', 'Beverages', '/upload/1cd3577e-e288-4a86-83a1-2ebda1c61e09.png', 1),
-('bc9c7c44-9771-41e6-9bf2-6bcdd10cfa48', 'Hygiene', '/upload/595b9760-4d75-4cd1-b3f0-fede04859527.png', 1),
-('eb124148-f44c-4a33-bd29-3471ad3ec8d6', 'Meat', '/upload/758fed3a-300a-4258-ae36-7e59a15a487a.png', 1);
+('14680012-5def-480a-a13f-b64cc5e0703a', 'Drinks', '/upload/category/b4e95a7a-2f31-488b-870c-e64949c8c066.png', 1),
+('24e8119f-4303-41ab-9a16-edd11c103c7c', 'grains', '/upload/category/b3566886-551b-418f-872e-b231ad8bc8ba.png', 1),
+('36887228-d095-4543-a245-ab7711a39705', 'Pastries', '/upload/category/685a1404-6921-4cb4-965c-979e747d5596.png', 1),
+('a726a2c9-5b93-4d60-9483-eeeecc540081', 'Meat', '/upload/category/3cc4f35c-bbbf-4c35-8551-98fee3ac845c.png', 1),
+('bee7e14f-2045-4495-ac05-802cddcad63b', 'fruits', '/upload/category/a47315f8-0233-41f6-bcad-2b59f42464c6.png', 1),
+('d75011d6-a5c1-4c16-b89f-b124ca69dc43', 'Hygiene', '/upload/category/f1713d7c-173b-42da-8914-858489569bee.png', 1),
+('f47ee1a9-68f6-4076-b482-645e3179844c', 'Vegetables', '/upload/category/cdc14e78-a1da-44f2-8c0a-b3fe98e3ebe6.png', 1);
 
 -- --------------------------------------------------------
 
@@ -68,7 +68,8 @@ CREATE TABLE `details` (
 --
 
 INSERT INTO `details` (`id`, `fullname`, `email`, `phone_number`, `gender`, `dob`, `flag`) VALUES
-('e831a3b8-f8bd-4492-b7da-b5ea785d3ad9', 'clifford', '123@gmail.com', '09123456789', 'male', '2011-11-11', 1);
+('751431d7-5a5a-4ef7-a794-694e698123c5', 'Clifford', 'cliffordjay.halcyondigital@gmail.com', '09123456789', 'male', '2025-03-12', 1),
+('ed37acde-7547-4658-b6a3-846ca820b9ae', 'clifford', 'c.iyac@gmail.com', '09123456789', 'male', '2011-11-11', 1);
 
 -- --------------------------------------------------------
 
@@ -92,13 +93,28 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `price`, `stock_in`, `stock_out`, `image`, `category`, `flag`) VALUES
-('58ee9bb1-bd54-40c9-bfdb-13fc63adac34', 'Coke', 100, 100, NULL, '/upload/076cd3db-20f5-4d21-9bff-ee63f8ab7f11.png', 'beverages', 1),
-('6d86563f-e954-4eec-9113-c3c446065833', 'Coke', 100, 100, NULL, '/upload/b1bcf4d5-7c27-4edb-b19a-e1228bf5460e.png', 'beverages', 1),
-('8182c95b-139b-4a5d-8629-80bf146cc51f', 'Coke', 100, 100, NULL, '/upload/f8da26f8-19b6-41fa-8667-fcedee2e59e4.png', 'beverages', 1),
-('88bd1067-a678-49b8-8f77-3c73633b2f29', 'Coke', 100, 100, NULL, '/upload/c3f42a62-f0be-4861-8674-67922b6cf71a.png', 'beverages', 1),
-('987c963f-3e46-4076-a460-5935dfcba791', 'Coke', 100, 100, NULL, '/upload/48118a27-40ff-41f9-a2e0-58172545a5a7.png', 'beverages', 1),
-('a16b4d4f-7fb8-4716-9d59-e25150cae794', 'Coke', 100, 100, NULL, '/upload/f8b025ea-776b-46a7-bab1-5112d1ca0850.png', 'beverages', 1),
-('abdd2799-8d98-43fa-bff0-4f9bee59f78a', 'Coke', 100, 100, NULL, '/upload/a4cbb0a9-13f7-4423-98a5-6e469a74952c.png', 'beverages', 1);
+('1932d6ed-324f-4f34-8d29-1c7f69e10530', 'Apple', 25, 100, NULL, '/upload/5943dbbd-f415-49ee-a1f2-1ff45dcc279a.png', 'Fruits', 1),
+('8cc67239-a371-432b-8abd-9884c89bbe20', 'Orange', 25, 100, NULL, '/upload/220392a6-dd23-4932-aff9-e2dc6099fa43.png', 'Fruits', 1),
+('b9760ae4-ce04-440f-b1e7-1e88359e1ec9', 'Apple', 25, 100, NULL, '/upload/aeb38e82-0bc2-4a58-a091-94b6f64e1671.png', 'Fruits', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profile`
+--
+
+CREATE TABLE `profile` (
+  `id` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `flag` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `profile`
+--
+
+INSERT INTO `profile` (`id`, `image`, `flag`) VALUES
+('f7333745-debe-4dfa-af1e-28cc2d7b0fa4', '/upload/0a867daa-5cac-42c2-a11f-8a593c938efc.png', 1);
 
 -- --------------------------------------------------------
 
@@ -110,6 +126,7 @@ CREATE TABLE `user` (
   `id` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `role` enum('user','admin') NOT NULL,
   `flag` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -117,11 +134,8 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `flag`) VALUES
-('05b31d2c-beea-4767-87f9-0c5a33c5c866', 'qwe', '$2b$10$DAiQ8MIpHi5N0dMO/SEiZuqMzX18drCUjySbHGTo8S90CNypAvvRa', 1),
-('4ef4f68c-dfd5-4525-8547-5ed4710f7fa0', 'lee', '$2b$10$M9nev1/p8DvRZDohDmB4H.RfQAeOQUOlvphcC9GTH7R1QhzODAxR.', 1),
-('a0f34d12-2f5d-4b1c-8455-d8b556ffefea', 'Clifford', '$2b$10$4Q7xAs9SNhZa7WkNaSp6guIJzm9uW7mZRsCrbrbS6Fmf7xKDRpMCO', 1),
-('e2c57971-d2eb-4f5f-8bfa-9a9733deed60', '123', '$2b$10$ECWXuWoLuz1UTwV5elxTAe8Cjnv8Z4QvO0FRdYxZlyfK3q7EYUzK2', 1);
+INSERT INTO `user` (`id`, `username`, `password`, `role`, `flag`) VALUES
+('4f3714c0-5b47-42d6-85fe-bc3b8ee16a3b', '123', '$2b$10$lj.OFybucdXvmAax5djnyeHagkCaf10dAh4Mgge8Pmn07.4G.1FWK', 'user', 1);
 
 -- --------------------------------------------------------
 
@@ -132,9 +146,36 @@ INSERT INTO `user` (`id`, `username`, `password`, `flag`) VALUES
 CREATE TABLE `user_details` (
   `id` varchar(255) NOT NULL,
   `user_id` varchar(255) NOT NULL,
-  `deatils_id` varchar(255) NOT NULL,
+  `details_id` varchar(255) NOT NULL,
   `flag` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_details`
+--
+
+INSERT INTO `user_details` (`id`, `user_id`, `details_id`, `flag`) VALUES
+('b066fdc5-735a-4807-89ab-68353cc0f3eb', '4f3714c0-5b47-42d6-85fe-bc3b8ee16a3b', 'ed37acde-7547-4658-b6a3-846ca820b9ae', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_profile`
+--
+
+CREATE TABLE `user_profile` (
+  `id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `profile_id` varchar(255) NOT NULL,
+  `flag` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_profile`
+--
+
+INSERT INTO `user_profile` (`id`, `user_id`, `profile_id`, `flag`) VALUES
+('d327f4db-cb3d-468c-9815-43812085933f', '4f3714c0-5b47-42d6-85fe-bc3b8ee16a3b', 'f7333745-debe-4dfa-af1e-28cc2d7b0fa4', 1);
 
 --
 -- Indexes for dumped tables
@@ -159,6 +200,12 @@ ALTER TABLE `product`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `profile`
+--
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -168,6 +215,12 @@ ALTER TABLE `user`
 -- Indexes for table `user_details`
 --
 ALTER TABLE `user_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_profile`
+--
+ALTER TABLE `user_profile`
   ADD PRIMARY KEY (`id`);
 COMMIT;
 

@@ -21,8 +21,8 @@ export default function HeaderComponents() {
   }, [profile]);
 
   const handleLogout = () => {
-    logOut();
     router.push("/");
+    logOut();
   };
 
   const toggleDropdown = () => {

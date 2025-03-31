@@ -11,21 +11,17 @@ export async function POST(req) {
 
     if (!username || !password) {
       return NextResponse.json(
-        {
-          message: "Username and password are required",
-        },
+        { message: "Username and password are required" },
         { status: 400 }
       );
     }
 
-    const query = `SELECT id,password, flag FROM user WHERE username = ?`;
+    const query = `SELECT id, password, role, flag FROM user WHERE username = ?`;
     const response = await queryDatabase(query, [username]);
 
     if (response.length === 0) {
       return NextResponse.json(
-        {
-          message: "Invalid username or password",
-        },
+        { message: "Invalid username or password" },
         { status: 401 }
       );
     }
@@ -34,9 +30,7 @@ export async function POST(req) {
 
     if (user.flag === 0) {
       return NextResponse.json(
-        {
-          message: "Account disabled by admin",
-        },
+        { message: "Account disabled by admin" },
         { status: 403 }
       );
     }
@@ -44,29 +38,33 @@ export async function POST(req) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
-        {
-          message: "Invalid username or password",
-        },
+        { message: "Invalid username or password" },
         { status: 401 }
       );
     }
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
-    return NextResponse.json(
-      {
-        message: "Login Successfully",
-        token: token,
-        data: response,
-      },
-      { status: 200 }
-    );
+    // For the admin role, let's return the token and a success message as well.
+    if (user.role === "admin") {
+      return NextResponse.json(
+        { message: "Hello Admin.", token, data: user },
+        { status: 200 }
+      );
+    }
+
+    // For the user role, send the login token.
+    if (user.role === "user") {
+      return NextResponse.json(
+        { message: "Login successful", token, data: user },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     return NextResponse.json(
-      {
-        message: "Internal server error",
-        error,
-      },
+      { message: "Internal server error", error: error.message || error },
       { status: 500 }
     );
   }

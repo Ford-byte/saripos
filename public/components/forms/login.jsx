@@ -36,7 +36,6 @@ export default function LoginForm({ toggleForm }) {
       console.log(error);
     } finally {
       setFormData({ username: "", password: "" });
-      router.push(`/`);
     }
   };
 
@@ -60,9 +59,10 @@ export default function LoginForm({ toggleForm }) {
             height={100}
             className="w-[200px] h-[100px]"
             alt="logo"
+            priority
           />
         </div>
-        <form className="mt-4" onSubmit={handleSubmit} action={`/`}>
+        <form className="mt-4" onSubmit={handleSubmit} action={`#`}>
           <div className="mb-4">
             <label
               htmlFor="username"

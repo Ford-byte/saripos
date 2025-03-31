@@ -33,14 +33,14 @@ export default function ProductBlock() {
               return (
                 <div
                   key={item.id}
-                  className="relative min-h-[250px] shadow-lg border-gray-200 rounded-lg border text-center flex items-center flex-col"
+                  className="relative min-h-[250px] justify-center shadow-lg border-gray-200 rounded-lg border text-center flex items-center flex-col"
                 >
                   <Image
                     src={item.image}
                     width={100}
                     height={50}
                     alt={item.name}
-                    className="w-[100px] h-[200px] object-cover mb-2"
+                    className="min-w-[100px] max-h-[100px] object-fill mb-2"
                   />
                   <div>
                     <h3 className="text-lg font-semibold">{item.name}</h3>

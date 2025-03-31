@@ -23,9 +23,11 @@ export async function POST(req) {
     const query = `
       INSERT INTO profile (id, image, flag) VALUES (?, ?, 1)
     `;
+    
     await queryDatabase(query, [profileId, imageUrl]);
 
     const queryTwo = `INSERT INTO user_profile (id, user_id, profile_id, flag) VALUES (?, ?, ?, 1)`;
+
     await queryDatabase(queryTwo, [uuidv4(), userId, profileId]);
 
     return NextResponse.json({

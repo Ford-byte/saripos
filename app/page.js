@@ -4,6 +4,7 @@ import LoginForm from "@/public/components/forms/login";
 import RegistrationForm from "@/public/components/forms/register";
 import { useUserStore } from "@/public/store/userStore";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const BannerBlock = dynamic(() =>
@@ -22,7 +23,7 @@ export default function Home() {
   const [changeForm, setChangeForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const { isLogin, setLogin } = useUserStore();
-
+  const router = useRouter();
   const toggleForm = () => {
     setChangeForm((prev) => !prev);
   };
@@ -32,8 +33,15 @@ export default function Home() {
     if (token) {
       setLogin(true);
     }
-    setLoading(false);
   }, [setLogin]);
+
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role === "admin") {
+      router.push(`/admin`);
+    }
+    setLoading(false);
+  }, [router]);
 
   if (loading) {
     return (

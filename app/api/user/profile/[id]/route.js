@@ -34,7 +34,10 @@ export async function GET(req) {
     const userProfile = await queryDatabase(query, [userId]);
 
     if (!userProfile || userProfile.length === 0) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Please provide a profile." },
+        { status: 404 }
+      );
     }
 
     // Cache the fetched data

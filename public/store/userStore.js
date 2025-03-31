@@ -31,20 +31,22 @@ export const useUserStore = create(
 
           if (response?.status === 200) {
             const { token, data, message } = response.data;
+            console.log("data", data);
             localStorage.setItem("token", token);
 
-            set({ user: data[0], isLogin: true });
+            set({ user: data, isLogin: true });
 
-            const userDetails = await get().getUserDetails({ id: data[0]?.id });
+            const userDetails = await get().getUserDetails({ id: data?.id });
             if (userDetails) {
               set({ details: userDetails?.data?.data[0] });
             }
 
-            const userProfile = await get().getUserProfile({ id: data[0]?.id });
+            const userProfile = await get().getUserProfile({ id: data?.id });
             if (userProfile) {
               set({ profile: userProfile?.data?.data[0] });
             }
 
+            localStorage.setItem("role", userProfile?.data?.data[0]?.role);
             toast.success(message || "Login successful!");
           } else {
             toast.error("Login failed. Please try again.");
@@ -99,7 +101,9 @@ export const useUserStore = create(
 
       getUserDetails: async ({ id }) => {
         try {
-          const response = await axios.get(`/api/user/details/details?id=${id}`);
+          const response = await axios.get(
+            `/api/user/details/details?id=${id}`
+          );
           return response;
         } catch (error) {
           toast.error(error?.response?.data?.message || "An error occurred.");
@@ -109,7 +113,9 @@ export const useUserStore = create(
 
       getUserProfile: async ({ id }) => {
         try {
-          const response = await axios.get(`/api/user/profile/profile?id=${id}`);
+          const response = await axios.get(
+            `/api/user/profile/profile?id=${id}`
+          );
           return response;
         } catch (error) {
           toast.error(error?.response?.data?.message || "An error occurred.");
