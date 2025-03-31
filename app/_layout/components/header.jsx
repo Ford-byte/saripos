@@ -6,16 +6,19 @@ import { useUserStore } from "@/public/store/userStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HeaderComponents() {
-  const { isLogin, logOut } = useUserStore();
+  const { isLogin, logOut, profile } = useUserStore();
+  const [myProfile, setMyProfile] = useState(profile);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const router = useRouter();
 
-  if (!isLogin) {
-    return <></>;
-  }
+  useEffect(() => {
+    if (profile) {
+      setMyProfile(profile);
+    }
+  }, [profile]);
 
   const handleLogout = () => {
     logOut();
@@ -25,6 +28,10 @@ export default function HeaderComponents() {
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
   };
+
+  if (!isLogin) {
+    return null;
+  }
 
   return (
     <header className="border-b shadow-md w-full fixed bg-white z-[1000] center">
@@ -39,7 +46,6 @@ export default function HeaderComponents() {
           />
         </Link>
 
-        {/* Search Bar */}
         <div
           className="flex items-center border border-gray-300 rounded-lg focus-within:border-green-500 focus-within:ring-1 focus-within:ring-green-500"
           id="search"
@@ -52,18 +58,24 @@ export default function HeaderComponents() {
           <Magnify className="size-[30px] mx-3 text-gray-500 cursor-pointer" />
         </div>
 
-        {/* Right Side */}
         <div className="flex gap-x-3 items-center">
           <Link href="/cart">
             <Cart className="cursor-pointer" />
           </Link>
 
-          {/* User Dropdown */}
           <div className="relative">
             <div
               className="size-10 rounded-full bg-gray-200 cursor-pointer"
               onClick={toggleDropdown}
-            ></div>
+            >
+              <Image
+                src={myProfile?.image || "/favicon.ico"}
+                width={40}
+                height={40}
+                alt="profile"
+                className="size-10 rounded-full"
+              />
+            </div>
 
             {isDropdownVisible && (
               <div className="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg rounded-md">

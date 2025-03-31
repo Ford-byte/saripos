@@ -1,8 +1,7 @@
 import { queryDatabase } from "@/app/api/config/route";
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { uploadImage } from "../../add-ons/imageUploader";
 
 export async function POST(req) {
   try {
@@ -10,23 +9,15 @@ export async function POST(req) {
     const userId = formData.get("id");
     const file = formData.get("image");
 
-    if (!userId || !file || !(file instanceof Blob)) {
+    if (!userId || !file) {
       return NextResponse.json(
         { message: "Invalid input: User ID and valid image file are required" },
         { status: 400 }
       );
     }
 
-    const uploadDir = path.join(process.cwd(), "public/uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
+    const imageUrl = await uploadImage(file);
 
-    const fileName = `${Date.now()}_${file.name || "upload.jpg"}`;
-    const filePath = path.join(uploadDir, fileName);
-
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(filePath, fileBuffer);
-
-    const imageUrl = `/uploads/${fileName}`;
     const profileId = uuidv4();
 
     const query = `

@@ -57,7 +57,7 @@ export async function POST(req) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const uploadDir = path.join(process.cwd(), "public", "upload");
+    const uploadDir = path.join(process.cwd(), "public", "upload/category");
     await mkdir(uploadDir, { recursive: true });
 
     const imageName = `${uuid()}.png`;
@@ -66,7 +66,7 @@ export async function POST(req) {
 
     const id = uuid();
     const query = `INSERT INTO category(id, category, image, flag) VALUES(?,?,?,1)`;
-    await queryDatabase(query, [id, category, `/upload/${imageName}`]);
+    await queryDatabase(query, [id, category, `/upload/category/${imageName}`]);
 
     cacheValidator({ action: "delete", key: "categories" });
 

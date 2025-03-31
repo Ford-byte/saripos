@@ -1,5 +1,4 @@
 "use client";
-
 import Plus from "@/public/icons/plus";
 import { useUserStore } from "@/public/store/userStore";
 import { useState } from "react";
@@ -22,7 +21,6 @@ const userSchema = z.object({
 });
 
 export default function ProfileBlock() {
-  const [profile, setProfile] = useState(null);
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -31,7 +29,7 @@ export default function ProfileBlock() {
     dob: "",
   });
   const [errors, setErrors] = useState({});
-  const { addUserDetails, user } = useUserStore();
+  const { addUserDetails, user, profile, details } = useUserStore();
 
   // Ensure user_id is retrieved from the user object
   const user_id = user?.id;
@@ -63,7 +61,6 @@ export default function ProfileBlock() {
     e.preventDefault();
     // Validate user data using Zod
     const validationResult = userSchema.safeParse(userData);
-
     if (!validationResult.success) {
       const fieldErrors = validationResult.error.errors.reduce((acc, err) => {
         acc[err.path[0]] = err.message;
@@ -88,123 +85,181 @@ export default function ProfileBlock() {
   };
 
   return (
-    <div className="center">
-      <div className="container">
-        <div className="pt-[80px] w-full h-[300px] bg-[#2E8D2B] "></div>
-        <div className="flex">
-          <div className="size-[200px] rounded-full pointer hover:bg-gray-200 bg-white border -translate-y-1/2 mx-[24px] flex justify-center items-center relative">
-            {profile ? (
-              <img
-                src={profile}
-                alt="Profile"
-                className="size-[200px] rounded-full object-cover"
-              />
-            ) : (
-              <div>
-                <Plus className={`size-12 pointer`} />
+    <div className="max-w-screen-xl mx-auto">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        {/* Banner Area */}
+        <div className="h-[240px] bg-gradient-to-r from-emerald-600 to-green-500"></div>
+
+        {/* Profile Section */}
+        <div className="px-8 pb-8">
+          <div className="flex items-end -mt-16 mb-6">
+            {/* Profile Picture */}
+            <div className="relative">
+              <div className="h-[160px] w-[160px] rounded-full border-4 border-white bg-white shadow-lg flex items-center justify-center overflow-hidden">
+                {profile ? (
+                  <img
+                    src={profile?.image}
+                    alt="Profile"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="bg-gray-50 h-full w-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+                    <Plus className="h-10 w-10 text-gray-500" />
+                  </div>
+                )}
+                {!profile && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleProfileUpload}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* User Name */}
+            <div className="ml-6 pb-4">
+              <h1 className="text-2xl font-semibold text-gray-800 capitalize">
+                {details?.fullname || "User Profile"}
+              </h1>
+            </div>
+          </div>
+
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Profile Form - Only show if details don't exist */}
+            {!details && (
+              <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200">
+                <div className="border-b border-gray-200">
+                  <h2 className="px-6 py-4 text-lg font-semibold text-gray-800">
+                    My Profile
+                  </h2>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={userData.name}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={userData.email}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      name="phone"
+                      value={userData.phone}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Gender
+                      </label>
+                      <select
+                        name="gender"
+                        value={userData.gender}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white"
+                      >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {errors.gender && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.gender}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date of Birth
+                      </label>
+                      <input
+                        type="date"
+                        name="dob"
+                        value={userData.dob}
+                        onChange={handleInputChange}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                      />
+                      {errors.dob && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.dob}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-emerald-600 text-white font-medium rounded-md hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
               </div>
             )}
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={handleProfileUpload}
-            />
-          </div>
-          <div className="text-2xl font-[600]">
-            {userData.name || "Fullname"}
-          </div>
-        </div>
-        <div className="w-full grid grid-cols-5 gap-x-[20px] h-fit">
-          <div className="col-span-2 border">
-            <h2 className="px-4 py-2 text-xl font-[600]">My Profile</h2>
-            <form onSubmit={handleSubmit} className="px-4 py-2">
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={userData.name}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                )}
+
+            {/* Settings Panel */}
+            <div
+              className={`${
+                details ? "lg:col-span-3" : "lg:col-span-1"
+              } bg-white rounded-lg border border-gray-200`}
+            >
+              <div className="border-b border-gray-200">
+                <h2 className="px-6 py-4 text-lg font-semibold text-gray-800">
+                  Settings
+                </h2>
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                )}
+
+              <div className="p-6">
+                <button className="px-6 py-2 bg-emerald-600 text-white font-medium rounded-md hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                  Change Password
+                </button>
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={userData.phone}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Gender</label>
-                <select
-                  name="gender"
-                  value={userData.gender}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-                {errors.gender && (
-                  <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">
-                  Date of Birth
-                </label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={userData.dob}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-                {errors.dob && (
-                  <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-[#2E8D2B] text-white rounded hover:bg-[#256b22]"
-              >
-                Save Changes
-              </button>
-            </form>
-          </div>
-          <div className="col-span-3 col-start-3 border h-fit">
-            <h2 className="p-4 text-xl font-[600]">Settings</h2>
-            <div className="p-4">
-              <button className="px-4 py-2 bg-[#2E8D2B] text-white rounded hover:bg-[#256b22]">
-                Change Password
-              </button>
             </div>
           </div>
         </div>
