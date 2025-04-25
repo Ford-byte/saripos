@@ -3,6 +3,7 @@
 import Cart from "@/public/icons/cart";
 import Magnify from "@/public/icons/magnify";
 import { useUserStore } from "@/public/store/userStore";
+import { useCartStore } from "@/public/store/useCartStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function HeaderComponents() {
   const { isLogin, logOut, profile } = useUserStore();
+  const { getCart, cart, updateCart, clearCart, addCart } = useCartStore();
   const [myProfile, setMyProfile] = useState(profile);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const router = useRouter();
@@ -17,12 +19,26 @@ export default function HeaderComponents() {
   useEffect(() => {
     if (profile) {
       setMyProfile(profile);
+      getCart(profile.user_id);
     }
-  }, [profile]);
+  }, [profile, getCart]);
 
-  const handleLogout = () => {
-    router.push("/");
-    logOut();
+  const handleLogout = async () => {
+    try {
+      if (cart && profile?.user_id) {
+        await addCart(profile.user_id, cart);
+        clearCart();
+      }
+    } catch (error) {
+      console.log("Error updating cart during logout:", error);
+    } finally {
+      try {
+        logOut();
+        router.push("/");
+      } catch (error) {
+        console.log("Error during logout:", error);
+      }
+    }
   };
 
   const toggleDropdown = () => {

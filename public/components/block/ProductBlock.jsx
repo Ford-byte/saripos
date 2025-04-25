@@ -1,21 +1,29 @@
 "use client";
 
 import { useProductStore } from "@/public/store/productStore";
+import { useCartStore } from "@/public/store/useCartStore"; // Import the cart store
 import Image from "next/image";
 import { useEffect } from "react";
 
 export default function ProductBlock() {
   const { getProducts, products } = useProductStore();
+  const { cart, setCart } = useCartStore(); // Access cart and setCart from the cart store
 
   useEffect(() => {
     getProducts();
   }, []);
 
-  const fetchData = async () => {
-    try {
-    } catch (error) {
-      console.error("Error fetching products:", error);
+  const addToCart = (product) => {
+    const updatedCart = cart ? [...cart] : [];
+    const existingProduct = updatedCart.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      existingProduct.quantity += 1; // Increment quantity if product already exists
+    } else {
+      updatedCart.push({ ...product, quantity: 1 }); // Add new product with quantity 1
     }
+
+    setCart(updatedCart); // Update the cart in the store
   };
 
   return (
@@ -46,7 +54,10 @@ export default function ProductBlock() {
                     <h3 className="text-lg font-semibold">{item.name}</h3>
                     <p className="text-sm text-gray-600">${item.price}</p>
                     <div className="flex justify-center">
-                      <button className="text-xs my-2 border py-2 w-fit px-2 capitalize text-[#2E8D2B] border-gray-300 hover:border-[#2E8D2B] pointer rounded-lg">
+                      <button
+                        onClick={() => addToCart(item)} // Add to cart on button click
+                        className="text-xs my-2 border py-2 w-fit px-2 capitalize text-[#2E8D2B] border-gray-300 hover:border-[#2E8D2B] pointer rounded-lg"
+                      >
                         ADD TO CART
                       </button>
                     </div>

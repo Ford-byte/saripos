@@ -54,20 +54,27 @@ body {
 .container {
   width: 100%;
   @media (width >= 40rem /* 640px */) {
-      max-width: 40rem /* 640px */;
+    max-width: 40rem /* 640px */;
   }
   @media (width >= 48rem /* 768px */) {
-      max-width: 48rem /* 768px */;
+    max-width: 48rem /* 768px */;
   }
   @media (width >= 64rem /* 1024px */) {
-      max-width: 54rem /* 1024px */;
+    max-width: 54rem /* 1024px */;
   }
   @media (width >= 80rem /* 1280px */) {
-      max-width: 70rem /* 1280px */;
+    max-width: 70rem /* 1280px */;
   }
-
 }
 
-.pointer{
-  @apply hover:cursor-pointer
+.pointer {
+  @apply hover:cursor-pointer;
+}
+
+input {
+  @apply px-[12px] py-[12px];
+}
+
+textarea {
+  @apply p-[12px];
 }
